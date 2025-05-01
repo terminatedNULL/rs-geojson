@@ -8,7 +8,7 @@ mod geojson {
 
     #[derive(Debug)]
     pub struct GeoJSON {
-        features: Feature
+        features: Vec<Feature>
     }
 
     #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone)]
@@ -49,7 +49,7 @@ mod geojson {
     }
 
     impl Coordinates {
-        pub fn empty_for(geometry_type: FeatureType) -> Self {
+        pub fn new_empty(geometry_type: &FeatureType) -> Self {
             match geometry_type {
                 FeatureType::Point => Coordinates::Point(Vec::new()),
                 FeatureType::MultiPoint => Coordinates::MultiPoint(Vec::new()),
@@ -85,7 +85,7 @@ mod geojson {
                 FeatureType::Feature => panic!("Cannot use FeatureType::Feature as geometry type."),
                 _ => Geometry {
                     geometry_type: geometry_type.clone(),
-                    coordinates: Some(Coordinates::empty_for(geometry_type)),
+                    coordinates: Some(Coordinates::new_empty(&geometry_type)),
                     geometries: None,
                 }
             }
@@ -109,16 +109,7 @@ mod geojson {
 
     impl Feature {
         pub fn new(geometry_type: FeatureType) -> Self {
-            let coordinates = match geometry_type {
-                FeatureType::Point => Coordinates::Point(Vec::new()),
-                FeatureType::MultiPoint => Coordinates::MultiPoint(Vec::new()),
-                FeatureType::LineString => Coordinates::LineString(Vec::new()),
-                FeatureType::MultiLineString => Coordinates::MultiLineString(Vec::new()),
-                FeatureType::Polygon => Coordinates::Polygon(Vec::new()),
-                FeatureType::MultiPolygon => Coordinates::MultiPolygon(Vec::new()),
-                FeatureType::GeometryCollection => todo!(),
-                FeatureType::Feature => unreachable!(),
-            };
+            let coordinates = Coordinates::new_empty(&geometry_type);
 
             Feature {
                 feature_type: FeatureType::Feature,
