@@ -8,7 +8,7 @@ mod geojson {
 
     #[derive(Debug)]
     pub struct GeoJSON {
-        features: Vec<Feature>
+        features: Feature
     }
 
     #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone)]
